@@ -65,7 +65,6 @@ namespace ClientServices.State.States
 
             _connectTextbox = new Textbox(100, ResourceManager) {Text = ConfigurationManager.GetServerAddress()};
             _connectTextbox.OnSubmit += ConnectTextboxOnSubmit;
-            _connectTextbox.SetVisible(false);
 
             Assembly assembly = Assembly.GetExecutingAssembly();
             FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
@@ -80,6 +79,17 @@ namespace ClientServices.State.States
                                   Sprite = "SpaceStationLogoColor",
                                   Position = new Point(Gorgon.Screen.Width - 550, 100)
                               };
+
+			_lblVersion.Update(0);
+			_titleImage.Update(0);
+			_connectTextbox.Position = new Point(_titleImage.ClientArea.Left + 40, _titleImage.ClientArea.Bottom + 50);
+			_connectTextbox.Update(0);
+			_buttConnect.Position = new Point(_connectTextbox.Position.X, _connectTextbox.ClientArea.Bottom + 20);
+			_buttConnect.Update(0);
+			_buttOptions.Position = new Point(_buttConnect.Position.X, _buttConnect.ClientArea.Bottom + 20);
+			_buttOptions.Update(0);
+			_buttExit.Position = new Point(_buttOptions.Position.X, _buttOptions.ClientArea.Bottom + 20);
+			_buttExit.Update(0);
         }
 
         #region IState Members
@@ -146,20 +156,12 @@ namespace ClientServices.State.States
 
         private void _buttConnect_Clicked(ImageButton sender)
         {
-            if (!_connectTextbox.IsVisible())
-            {
-                _connectTextbox.SetVisible(true);
-                return;
-            }
+            if (!_isConnecting)
+                StartConnect(_connectTextbox.Text);
             else
             {
-                if (!_isConnecting)
-                    StartConnect(_connectTextbox.Text);
-                else
-                {
-                    _isConnecting = false;
-                    NetworkManager.Disconnect();
-                }
+                _isConnecting = false;
+                NetworkManager.Disconnect();
             }
         }
 
@@ -290,11 +292,6 @@ namespace ClientServices.State.States
 
         public void Update(FrameEventArgs e)
         {
-            _connectTextbox.Position = new Point(_titleImage.ClientArea.Left + 40, _titleImage.ClientArea.Bottom + 50);
-            _buttConnect.Position = new Point(_connectTextbox.Position.X, _connectTextbox.ClientArea.Bottom + 20);
-            _buttOptions.Position = new Point(_buttConnect.Position.X, _buttConnect.ClientArea.Bottom + 20);
-            _buttExit.Position = new Point(_buttOptions.Position.X, _buttOptions.ClientArea.Bottom + 20);
-
             if (_isConnecting)
             {
                 TimeSpan dif = DateTime.Now - _connectTime;
