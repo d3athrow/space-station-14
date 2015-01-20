@@ -21,5 +21,6 @@ cd ResourcePack
 cd ..
 echo Cleaning up...
 rd /S /Q ResourcePack
+
 echo Resource pack build complete.
 pause

@@ -170,7 +170,7 @@ namespace SS13_Server
             stopWatch.Start();
             mainLoopTimer = timerQueue.CreateTimer(s =>
                                                        {
-                                                           RunLoop();
+                                                       RunLoop();
                                                        }, null, 0, period);
             
             while (Active)
